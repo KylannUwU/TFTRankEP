@@ -32,18 +32,17 @@ app.get("/rank/:region/:username", async (req, res) => {
     const entries = await rankRes.json();
     const tftRank = entries.find(e => e.queueType === "RANKED_TFT");
 
-    if (!tftRank) return res.status(404).json({ error: "No TFT rank found" });
+    if (!tftRank) {
+      res.status(404).send("Unranked");
+      return;
+    }
 
-    res.json({
-      summoner: summoner.name,
-      tier: tftRank.tier,
-      rank: tftRank.rank,
-      lp: tftRank.leaguePoints
-    });
+    const result = `${tftRank.tier} ${tftRank.rank} - ${tftRank.leaguePoints} LP`;
+    res.set("Content-Type", "text/plain").send(result);
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal error or player not found" });
+    res.status(500).send("❌ Error al obtener el rango externo. nolleyPium nolleySip");
   }
 });
 
