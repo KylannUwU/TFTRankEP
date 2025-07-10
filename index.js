@@ -32,14 +32,11 @@ app.get("/rank/hyperroll/:puuid", async (req, res) => {
 
     const hyperRoll = leagues.find(l => l.queueType === "RANKED_TFT_TURBO");
 
-    if (!hyperRoll) return res.json({ message: "No tiene rango Hyper Roll" });
+    if (!hyperRoll) return res.send("Unrated");
 
-    return res.json({
-      tier: hyperRoll.ratedTier,
-      rating: hyperRoll.ratedRating,
-      wins: hyperRoll.wins,
-      losses: hyperRoll.losses
-    });
+      const texto = `${hyperRoll.ratedTier} (+${hyperRoll.ratedRating})`;
+      return res.send(texto);
+
 
   } catch (error) {
     console.error("Error en API:", error);
